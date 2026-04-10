@@ -27,11 +27,12 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .authenticationProvider(authenticationProvider()) // ✅ ADD THIS
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/journal/**", "/user/**").authenticated()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // ✅ CHANGE THIS (for now)
                 )
                 .httpBasic(Customizer.withDefaults())
                 .build();
